@@ -1,16 +1,75 @@
-256	arn:aws:iam::642473022881:role/ecsTaskExecutionRole	mywallst-task	512	awsvpc	2	ACTIVE	arn:aws:ecs:us-east-2:642473022881:task-definition/mywallst-task:2
-COMPATIBILITIES	EC2
-COMPATIBILITIES	FARGATE
-CONTAINERDEFINITIONS	0	True	642473022881.dkr.ecr.eu-west-1.amazonaws.com/mywallst-task:latest	mywallst-task
-ENVIRONMENT	STRIPE_API_KEY	sk_test_51Hv0GeEtUponlBUMUoOJTXhklxcakfqBxir3eejbxE5PEYEHKlpTHSbyRcOp8W9JXEviXUOW90ZFrcEYoBDWwIP100CPsm6vK1
-LOGCONFIGURATION	awslogs
-OPTIONS	/ecs/mywallst-task	us-east-2	ecs
-PORTMAPPINGS	8000	8000	tcp
-REQUIRESATTRIBUTES	com.amazonaws.ecs.capability.logging-driver.awslogs
-REQUIRESATTRIBUTES	ecs.capability.execution-role-awslogs
-REQUIRESATTRIBUTES	com.amazonaws.ecs.capability.ecr-auth
-REQUIRESATTRIBUTES	com.amazonaws.ecs.capability.docker-remote-api.1.19
-REQUIRESATTRIBUTES	ecs.capability.execution-role-ecr-pull
-REQUIRESATTRIBUTES	com.amazonaws.ecs.capability.docker-remote-api.1.18
-REQUIRESATTRIBUTES	ecs.capability.task-eni
-REQUIRESCOMPATIBILITIES	FARGATE
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-2:642473022881:task-definition/mywallst-task:2",
+        "containerDefinitions": [
+            {
+                "name": "mywallst-task",
+                "image": "642473022881.dkr.ecr.eu-west-1.amazonaws.com/mywallst-task:latest",
+                "cpu": 0,
+                "portMappings": [
+                    {
+                        "containerPort": 8000,
+                        "hostPort": 8000,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [
+                    {
+                        "name": "STRIPE_API_KEY",
+                        "value": "sk_test_51Hv0GeEtUponlBUMUoOJTXhklxcakfqBxir3eejbxE5PEYEHKlpTHSbyRcOp8W9JXEviXUOW90ZFrcEYoBDWwIP100CPsm6vK1"
+                    }
+                ],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/mywallst-task",
+                        "awslogs-region": "us-east-2",
+                        "awslogs-stream-prefix": "ecs"
+                    }
+                }
+            }
+        ],
+        "family": "mywallst-task",
+        "executionRoleArn": "arn:aws:iam::642473022881:role/ecsTaskExecutionRole",
+        "networkMode": "awsvpc",
+        "revision": 2,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "256",
+        "memory": "512"
+    }
+}
