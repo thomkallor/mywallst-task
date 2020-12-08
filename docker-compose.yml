@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  app:
+    image: stripeapp:latest
+    build: .
+    environment:
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+    ports:
+      - "8000:8000"
