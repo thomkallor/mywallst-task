@@ -22,9 +22,12 @@ POST /subscription/{user_id}/{method_id}
 ## 4.An API to handle webhooks
 POST /webhook
 
-To Test the application use the /api/token to login
+To Test the application use the POST /api/token to login
+
 The credentials are:
+
 username: admin
+
 password: password
 
 ![alt text](https://i.ibb.co/fdsDbv0/example-login.png)
