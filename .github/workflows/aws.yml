@@ -47,13 +47,12 @@ jobs:
 
     - name: Login to Amazon ECR
       id: login-ecr
-      run: |
-        docker login -u AWS -p $(aws ecr get-login) public.ecr.aws/d9c7s0z3
+      uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: public.ecr.aws/d9c7s0z3
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: mywallst-task
         IMAGE_TAG: ${{ github.sha }}
       run: |
