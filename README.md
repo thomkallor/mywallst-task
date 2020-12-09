@@ -60,3 +60,8 @@ in the root directory
 Both these methods should make the application available on:
 
 http://localhost:8000
+
+I am including a postman collection to make it easier if you want to play around with the APIs but still the Authorization header needs to be set:
+
+The file is in the root directory mytask.postman_collection.json
+
