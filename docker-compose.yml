@@ -6,4 +6,4 @@ services:
     environment:
       - STRIPE_API_KEY=${STRIPE_API_KEY}
     ports:
-      - "8000:8000"
+      - "8000:80"
