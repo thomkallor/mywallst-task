@@ -2,7 +2,9 @@
 http://ec2-3-132-215-210.us-east-2.compute.amazonaws.com/swagger/
 
 user_id - The id of the user (I have already created a default admin user through migrations the user_id of this user is 1)
+
 method_id - The payment method's stripe_id created by the user
+
 price_id - The price_id(stripe's) to subscribe to. I already created products and price and a price_id that can be used (pm_1Hvq6xEtUponlBUM5rQ1Otrr)
 
 
