@@ -4,7 +4,12 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from stripeapp.subscription.serializers import CustomerRequestSerializer, PaymentMethodRequestSerializer, PaymentMethodSerializer, SubscriptionSerializer, SubscriptionRequestSerializer
+from stripeapp.subscription.serializers import (
+    CustomerRequestSerializer,
+    PaymentMethodRequestSerializer,
+    PaymentMethodSerializer,
+    SubscriptionSerializer,
+    SubscriptionRequestSerializer)
 from stripeapp.subscription.models import PaymentMethod, Subscription, User
 from stripeapp.subscription.permissions import IsSameUser
 from stripeapp.config import STRIPE_API_KEY
@@ -47,7 +52,6 @@ class WebHook(GenericAPIView):
 
         # Handle the event
         if event.type == 'customer.subscription.created':
-
             subscription = event.data.object  # contains a stripe.PaymentIntent
             # Then define and call a method to handle the successful payment intent.
             # handle_payment_intent_succeeded(payment_intent)
@@ -59,7 +63,6 @@ class WebHook(GenericAPIView):
                 return Response(status=400)
 
         elif event.type == 'customer.subscription.updated':
-
             subscription = event.data.object  # contains a stripe.PaymentMethod
             # Then define and call a method to handle the successful attachment of a PaymentMethod.
             # handle_payment_method_attached(payment_method)
@@ -87,22 +90,20 @@ class PaymentDetails(CreateAPIView):
     @swagger_auto_schema(request_body=PaymentMethodRequestSerializer, responses={'200': PaymentMethodSerializer})
     def post(self, request, user_id):
         """
-            Creates new payment method for a customer.
-            When the user creates a payment method for the first time it create a new customer in stripe and makes the card default.
+        Creates new payment method for a customer.
+        When the user creates a payment method for the first time,
+        it create a new customer in stripe and makes the card default.
         """
         req_serializer = PaymentMethodRequestSerializer(data=request.data)
-        if(req_serializer.is_valid()):
 
+        if(req_serializer.is_valid()):
             try:
                 user = self.get_user(user_id)
-
             except User.DoesNotExist:
                 return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
             try:
-
                 # create the payment method and update in database
-
                 payment_method = stripe.PaymentMethod.create(
                     **req_serializer.validated_data)
                 method_id = payment_method.get('id')
@@ -129,18 +130,14 @@ class PaymentDetails(CreateAPIView):
                     cust_id = created_cust.get('id')
 
                 # update the payment method with the customer_id
-
-                stripe.PaymentMethod.attach(
-                    method_id, customer=cust_id)
-
+                stripe.PaymentMethod.attach(method_id, customer=cust_id)
                 data = {'stripe_id': method_id, 'holder_name': holder_name,
                         'last4': last4, 'brand': brand, 'user': user.id, 'type': _type, 'is_default': is_default}
-
                 # save payment method in database
                 payment_details = self.get_serializer(data=data)
+
                 if(payment_details.is_valid()):
                     payment_details.save()
-
                     return Response(payment_details.data, status=status.HTTP_201_CREATED)
 
                 return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -149,8 +146,8 @@ class PaymentDetails(CreateAPIView):
                 exception_type = type(err).__name__
                 body = {'error': exception_type}
                 return Response(body, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomerDefaultPayment(GenericAPIView):
@@ -164,15 +161,14 @@ class CustomerDefaultPayment(GenericAPIView):
     @swagger_auto_schema(request_body=no_body)
     def put(self, request, user_id, method_id):
         """
-            Updates the default payment method for a customer.
+        Updates the default payment method for a customer.
         """
-
         try:
             # check if method belongs to user
             method = self.get_method(user_id, method_id)
-
         except PaymentMethod.DoesNotExist:
             return Response({'error': 'Payment method not found.'}, status=status.HTTP_404_NOT_FOUND)
+
         try:
             user = method.user
 
@@ -207,18 +203,15 @@ class SubscriptionDetails(CreateAPIView):
         """
             Create a new subscription for a customer.
         """
-
         try:
             # check if method belongs to user
             method = self.get_method(user_id, method_id)
-
         except PaymentMethod.DoesNotExist:
             return Response({'error': 'Payment method not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         req_serializer = SubscriptionRequestSerializer(data=request.data)
 
         if(req_serializer.is_valid()):
-
             try:
                 price_id = req_serializer.validated_data.get('price_id')
                 created_sub = stripe.Subscription.create(
@@ -234,6 +227,7 @@ class SubscriptionDetails(CreateAPIView):
                     return Response(sub_serializer.data, status=status.HTTP_201_CREATED)
 
                 return Response(sub_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             except Exception as err:
                 exception_type = type(err).__name__
                 body = {'error': exception_type}
