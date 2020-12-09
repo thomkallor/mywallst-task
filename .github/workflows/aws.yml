@@ -52,7 +52,7 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: public.ecr.aws/d9c7s0z3
         ECR_REPOSITORY: mywallst-task
         IMAGE_TAG: ${{ github.sha }}
       run: |
@@ -72,13 +72,13 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: mywallst-task
+        container-name: wallst
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: mywallst-service
-        cluster: mywallst
+        service: wallst-service
+        cluster: wallst-cluster
         wait-for-service-stability: true
