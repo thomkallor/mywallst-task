@@ -24,6 +24,16 @@ from drf_yasg import openapi
 stripe.api_key = STRIPE_API_KEY
 
 
+def bad_request(err):
+    exception_type = type(err).__name__
+    body = {'error': exception_type}
+    return Response(body, status=status.HTTP_400_BAD_REQUEST)
+
+
+def status_404(msg):
+    return Response({'error': msg}, status=status.HTTP_404_NOT_FOUND)
+
+
 class WebHook(GenericAPIView):
 
     def get_serializer(self):
@@ -100,7 +110,7 @@ class PaymentDetails(CreateAPIView):
             try:
                 user = self.get_user(user_id)
             except User.DoesNotExist:
-                return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+                return status_404('User not found.')
 
             try:
                 # create the payment method and update in database
@@ -143,9 +153,7 @@ class PaymentDetails(CreateAPIView):
                 return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             except Exception as err:
-                exception_type = type(err).__name__
-                body = {'error': exception_type}
-                return Response(body, status=status.HTTP_400_BAD_REQUEST)
+                return bad_request(err)
 
         return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -167,7 +175,7 @@ class CustomerDefaultPayment(GenericAPIView):
             # check if method belongs to user
             method = self.get_method(user_id, method_id)
         except PaymentMethod.DoesNotExist:
-            return Response({'error': 'Payment method not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return status_404('Payment method not found.')
 
         try:
             user = method.user
@@ -185,9 +193,7 @@ class CustomerDefaultPayment(GenericAPIView):
             return Response(method_serializer.data, status=status.HTTP_200_OK)
 
         except Exception as err:
-            exception_type = type(err).__name__
-            body = {'error': exception_type}
-            return Response(body, status=status.HTTP_400_BAD_REQUEST)
+            return bad_request(err)
 
 
 class SubscriptionDetails(CreateAPIView):
@@ -207,7 +213,7 @@ class SubscriptionDetails(CreateAPIView):
             # check if method belongs to user
             method = self.get_method(user_id, method_id)
         except PaymentMethod.DoesNotExist:
-            return Response({'error': 'Payment method not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return status_404('Payment method not found.')
 
         req_serializer = SubscriptionRequestSerializer(data=request.data)
 
@@ -229,8 +235,6 @@ class SubscriptionDetails(CreateAPIView):
                 return Response(sub_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             except Exception as err:
-                exception_type = type(err).__name__
-                body = {'error': exception_type}
-                return Response(body, status=status.HTTP_400_BAD_REQUEST)
+                return bad_request(err)
 
         return Response(req_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
