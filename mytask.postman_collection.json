@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "a2ffa17f-c518-4f2a-bf31-3247205878fa",
+		"name": "mytask",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create payment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3NDQwNDc1LCJqdGkiOiJhZmI2ZWU0MWNhMzU0YTQ0OTA5NWMzNTNjZjJiM2QzZSIsInVzZXJfaWQiOjF9.-gKOmlz-1J_aaogwBxnt6NFGHRkUXCr5jWGZQqW9F3Y",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"card\",\r\n    \"card\":{\r\n        \"number\":4242424242424242,\r\n        \"exp_month\":12,\r\n        \"exp_year\":2021,\r\n        \"cvc\":422\r\n    },\r\n    \"billing_details\":{\r\n        \"name\":\"fd\",\r\n        \"address\":{\r\n        \"city\":\"New york\",\r\n        \"country\":\"US\",\r\n        \"line1\":\"line1\",\r\n        \"line2\":\"line2\",\r\n        \"postal_code\":\"code\",\r\n        \"state\":\"New york\"\r\n        },\r\n        \"email\":\"email@email.com\",\r\n        \"phone\":89283021234\r\n    },\r\n    \"customer\":null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ec2-3-132-215-210.us-east-2.compute.amazonaws.com/paymentmethod/1",
+					"protocol": "http",
+					"host": [
+						"ec2-3-132-215-210",
+						"us-east-2",
+						"compute",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"paymentmethod",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "default payment",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3NDQwNDc1LCJqdGkiOiJhZmI2ZWU0MWNhMzU0YTQ0OTA5NWMzNTNjZjJiM2QzZSIsInVzZXJfaWQiOjF9.-gKOmlz-1J_aaogwBxnt6NFGHRkUXCr5jWGZQqW9F3Y",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://ec2-3-132-215-210.us-east-2.compute.amazonaws.com/customer/1/pm_1Hvq6xEtUponlBUM5rQ1Otrr",
+					"protocol": "http",
+					"host": [
+						"ec2-3-132-215-210",
+						"us-east-2",
+						"compute",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"customer",
+						"1",
+						"pm_1Hvq6xEtUponlBUM5rQ1Otrr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create subscription",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3NDQwNDc1LCJqdGkiOiJhZmI2ZWU0MWNhMzU0YTQ0OTA5NWMzNTNjZjJiM2QzZSIsInVzZXJfaWQiOjF9.-gKOmlz-1J_aaogwBxnt6NFGHRkUXCr5jWGZQqW9F3Y",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"price_id\":\"price_1Hv5XTEtUponlBUMn4Woapo3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ec2-3-132-215-210.us-east-2.compute.amazonaws.com/subscription/1/pm_1Hvq6xEtUponlBUM5rQ1Otrr",
+					"protocol": "http",
+					"host": [
+						"ec2-3-132-215-210",
+						"us-east-2",
+						"compute",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"subscription",
+						"1",
+						"pm_1Hvq6xEtUponlBUM5rQ1Otrr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "webhook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"created\": 1326853478,\r\n  \"livemode\": false,\r\n  \"id\": \"evt_00000000000000\",\r\n  \"type\": \"customer.subscription.created\",\r\n  \"object\": \"event\",\r\n  \"request\": null,\r\n  \"pending_webhooks\": 1,\r\n  \"api_version\": \"2020-08-27\",\r\n  \"data\": {\r\n    \"object\": {\r\n      \"id\": \"sub_00000000000000\",\r\n      \"object\": \"subscription\",\r\n      \"application_fee_percent\": null,\r\n      \"billing_cycle_anchor\": 1607369142,\r\n      \"billing_thresholds\": null,\r\n      \"cancel_at\": null,\r\n      \"cancel_at_period_end\": false,\r\n      \"canceled_at\": null,\r\n      \"collection_method\": \"charge_automatically\",\r\n      \"created\": 1607369142,\r\n      \"current_period_end\": 1610047542,\r\n      \"current_period_start\": 1607369142,\r\n      \"customer\": \"cus_00000000000000\",\r\n      \"days_until_due\": null,\r\n      \"default_payment_method\": null,\r\n      \"default_source\": null,\r\n      \"default_tax_rates\": [\r\n      ],\r\n      \"discount\": null,\r\n      \"ended_at\": null,\r\n      \"items\": {\r\n        \"object\": \"list\",\r\n        \"data\": [\r\n          {\r\n            \"id\": \"si_00000000000000\",\r\n            \"object\": \"subscription_item\",\r\n            \"billing_thresholds\": null,\r\n            \"created\": 1607369143,\r\n            \"metadata\": {\r\n            },\r\n            \"price\": {\r\n              \"id\": \"price_00000000000000\",\r\n              \"object\": \"price\",\r\n              \"active\": true,\r\n              \"billing_scheme\": \"per_unit\",\r\n              \"created\": 1607193083,\r\n              \"currency\": \"eur\",\r\n              \"livemode\": false,\r\n              \"lookup_key\": null,\r\n              \"metadata\": {\r\n              },\r\n              \"nickname\": null,\r\n              \"product\": \"prod_00000000000000\",\r\n              \"recurring\": {\r\n                \"aggregate_usage\": null,\r\n                \"interval\": \"month\",\r\n                \"interval_count\": 1,\r\n                \"usage_type\": \"licensed\"\r\n              },\r\n              \"tiers_mode\": null,\r\n              \"transform_quantity\": null,\r\n              \"type\": \"recurring\",\r\n              \"unit_amount\": 1000,\r\n              \"unit_amount_decimal\": \"1000\"\r\n            },\r\n            \"quantity\": 1,\r\n            \"subscription\": \"sub_00000000000000\",\r\n            \"tax_rates\": [\r\n            ]\r\n          }\r\n        ],\r\n        \"has_more\": false,\r\n        \"url\": \"/v1/subscription_items?subscription=sub_IWt7lOlijKfkVv\"\r\n      },\r\n      \"latest_invoice\": \"in_1HvpL8EtUponlBUMA27JzrJc\",\r\n      \"livemode\": false,\r\n      \"metadata\": {\r\n      },\r\n      \"next_pending_invoice_item_invoice\": null,\r\n      \"pause_collection\": null,\r\n      \"pending_invoice_item_interval\": null,\r\n      \"pending_setup_intent\": null,\r\n      \"pending_update\": null,\r\n      \"schedule\": null,\r\n      \"start_date\": 1607369142,\r\n      \"status\": \"active\",\r\n      \"transfer_data\": null,\r\n      \"trial_end\": null,\r\n      \"trial_start\": null\r\n    },\r\n    \"previous_attributes\": {\r\n      \"plan\": {\r\n        \"id\": \"OLD_00000000000000\",\r\n        \"object\": \"plan\",\r\n        \"active\": true,\r\n        \"aggregate_usage\": null,\r\n        \"amount\": 10000,\r\n        \"amount_decimal\": \"10000\",\r\n        \"billing_scheme\": \"per_unit\",\r\n        \"created\": 1607193257,\r\n        \"currency\": \"eur\",\r\n        \"interval\": \"year\",\r\n        \"interval_count\": 1,\r\n        \"livemode\": false,\r\n        \"metadata\": {\r\n        },\r\n        \"nickname\": null,\r\n        \"product\": \"prod_00000000000000\",\r\n        \"tiers_mode\": null,\r\n        \"transform_usage\": null,\r\n        \"trial_period_days\": null,\r\n        \"usage_type\": \"licensed\",\r\n        \"name\": \"Old plan\"\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ec2-3-132-215-210.us-east-2.compute.amazonaws.com/webhook",
+					"protocol": "http",
+					"host": [
+						"ec2-3-132-215-210",
+						"us-east-2",
+						"compute",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"webhook"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
