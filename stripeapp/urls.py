@@ -28,6 +28,8 @@ from drf_yasg import openapi
 # from rest_framework_simplejwt import views as jwt_views
 from stripeapp.subscription.urls import subscription_urls
 
+app_name = 'stripeapp'
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Snippets API",

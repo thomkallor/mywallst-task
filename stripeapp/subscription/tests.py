@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
 from rest_framework.test import force_authenticate
@@ -20,13 +22,13 @@ class PaymentDetailsTest(APITestCase):
     def setUp(self):
 
         self.req_body = pay_req
+        self.pay_url = reverse('newpayment', kwargs={'user_id': admin.id})
 
     def test_success(self):
 
         global payment_id
 
-        response = client.post(
-            f'/paymentmethod/{admin.id}', self.req_body, format='json')
+        response = client.post(self.pay_url, self.req_body, format='json')
 
         payment_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
@@ -37,8 +39,7 @@ class PaymentDetailsTest(APITestCase):
 
         req_fail = copy.deepcopy(self.req_body)
         req_fail['card'] = None
-        response = client.post(
-            f'/paymentmethod/{admin.id}', req_fail, format='json')
+        response = client.post(self.pay_url, req_fail, format='json')
 
         assert response.status_code == 400
 
@@ -49,23 +50,26 @@ class DefaultPaymentTest(APITestCase):
 
         # create a payment method
 
-        response = client.post(
-            f'/paymentmethod/{admin.id}', pay_req, format='json')
+        pay_url = reverse('newpayment', kwargs={'user_id': admin.id})
+        response = client.post(pay_url, pay_req, format='json')
 
-        self.payment_id = json.loads(
+        payment_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
+
+        self.success_url = reverse('defaultpayment', kwargs={
+                                   'user_id': admin.id, 'method_id': payment_id})
+        self.fail_url = reverse('defaultpayment', kwargs={
+                                'user_id': admin.id, 'method_id': '01'})
 
     def test_success(self):
 
-        response = client.put(
-            f'/customer/{admin.id}/{self.payment_id}', format='json')
+        response = client.put(self.success_url, format='json')
 
         self.assertEqual(200, response.status_code)
 
     def test_failure(self):
 
-        response = client.put(
-            f'/paymentmethod/{admin.id}/01', format='json')
+        response = client.put(self.fail_url, format='json')
 
         self.assertEqual(404, response.status_code)
 
@@ -74,20 +78,25 @@ class SubscriptionTest(APITestCase):
 
     def setUp(self):
 
-        self.req_body = sub_req
+        pay_url = reverse('newpayment', kwargs={'user_id': admin.id})
 
         # create a payment method
 
-        response = client.post(
-            f'/paymentmethod/{admin.id}', pay_req, format='json')
+        response = client.post(pay_url, pay_req, format='json')
 
-        self.payment_id = json.loads(
+        payment_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
+
+        self.success_url = reverse('newsubscription', kwargs={
+                                   'user_id': admin.id, 'method_id': payment_id})
+        self.fail_url = reverse('newsubscription', kwargs={
+                                'user_id': admin.id, 'method_id': '01'})
+
+        self.req_body = sub_req
 
     def test_success(self):
 
-        response = client.post(
-            f'/subscription/{admin.id}/{self.payment_id}', self.req_body, format='json')
+        response = client.post(self.success_url, self.req_body, format='json')
 
         subscription_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
@@ -96,8 +105,7 @@ class SubscriptionTest(APITestCase):
 
     def test_failure(self):
 
-        response = client.post(
-            f'/subscription/{admin.id}/01', self.req_body, format='json')
+        response = client.post(self.fail_url, self.req_body, format='json')
 
         self.assertEqual(404, response.status_code)
 
@@ -106,21 +114,25 @@ class WebHookTest(APITestCase):
 
     def setUp(self):
 
+        pay_url = reverse('newpayment', kwargs={'user_id': admin.id})
+
         # create a payment method
 
-        response = client.post(
-            f'/paymentmethod/{admin.id}', pay_req, format='json')
+        response = client.post(pay_url, pay_req, format='json')
 
         payment_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
 
         # create a subscription
+        sub_url = reverse('newsubscription', kwargs={
+            'user_id': admin.id, 'method_id': payment_id})
 
-        response = client.post(
-            f'/subscription/{admin.id}/{payment_id}', sub_req, format='json')
+        response = client.post(sub_url, sub_req, format='json')
 
         subscription_id = json.loads(
             response.content.decode('utf-8')).get('stripe_id')
+
+        self.url = reverse('webhook')
 
         self.req_body = {
             "id": "evt_00000000000000",
@@ -136,8 +148,7 @@ class WebHookTest(APITestCase):
 
     def subscription_created(self):
 
-        response = client.post(
-            f'/webhook', self.req_body, format='json')
+        response = client.post(self.url, self.req_body, format='json')
 
         self.assertEqual(200, response.status_code)
 
@@ -146,7 +157,6 @@ class WebHookTest(APITestCase):
         req_updated = copy.deepcopy(self.req_body)
         req_updated['type'] = 'customer.subscription.updated'
 
-        response = client.post(
-            f'/webhook', self.req_body, format='json')
+        response = client.post(self.url, self.req_body, format='json')
 
         self.assertEqual(200, response.status_code)
