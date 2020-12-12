@@ -4,7 +4,7 @@ from stripeapp.subscription.models import User
 
 
 def forwards_func(apps, schema_editor):
-    User.objects.create_superuser('admin', 'password')
+    User.objects.create_superuser(username='admin', password='password')
 
 
 def reverse_func(apps, schema_editor):
