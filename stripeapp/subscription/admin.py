@@ -1,8 +1,8 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from stripeapp.subscription.models import User, PaymentMethod, Subscription
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django import forms
+from stripeapp.subscription.models import PaymentMethod, Subscription, User
 
 
 class MyUserAdmin(UserAdmin):
